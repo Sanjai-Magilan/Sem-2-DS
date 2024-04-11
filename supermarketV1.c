@@ -1,8 +1,21 @@
+/**
+ * @file SuperMarket_Management_System.c
+ * @brief A simple inventory management system.
+ *
+ * This program allows users to manage a list of products in an inventory.
+ * Users can add, view, delete, update, and search for products, generate bills,
+ * calculate total sales, and backup/restore inventory data. It also includes
+ * functionality for management information such as employee details and sales information.
+ *
+ * @authors Sanjai Magilan.S, Miruthul Kumar.M, Naveen.N
+ * @date [7/4/2024]
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-// ANSI color codes for text formatting
+// Define ANSI color codes for better visual presentation in the terminal
 #define ANSI_COLOR_RED     "\x1b[31m"
 #define ANSI_COLOR_GREEN   "\x1b[32m"
 #define ANSI_COLOR_YELLOW  "\x1b[33m"
@@ -11,12 +24,10 @@
 #define ANSI_COLOR_CYAN    "\x1b[36m"
 #define ANSI_COLOR_RESET   "\x1b[0m"
 
-// Structure for date
 typedef struct {
     int day, month, year;
 } Date;
 
-// Structure for product
 typedef struct {
     int id;
     char name[100];
@@ -24,42 +35,66 @@ typedef struct {
     int quantity;
 } Product;
 
-// Structure for node of linked list
 typedef struct node {
     Product product;
     struct node *next;
 } Node;
 
-// Function to add a product to the inventory
+// Function prototypes
+void addProduct(Node **head);
+void viewProducts(Node *head);
+void deleteProduct(Node **head, int id);
+void generateBill(Node *head);
+float calculateTotalSales(Node *head);
+void searchProduct(Node *head, int id);
+void updateProduct(Node *head, int id);
+void backupInventory(Node *head);
+void restoreInventory(Node **head);
+void emp();
+void sale();
+
+/**
+ * @brief Adds a new product to the inventory.
+ *
+ * This function prompts the user to enter details of a new product and adds it to the inventory.
+ *
+ * @param head Pointer to the head of the linked list representing the inventory.
+ */
 void addProduct(Node **head) {
-    Node *newProduct = (Node *)malloc(sizeof(Node));
-    if (newProduct == NULL) {
-        printf(ANSI_COLOR_RED "Memory allocation failed.\n" ANSI_COLOR_RESET);
+    Node *newProduct = (Node *)malloc(sizeof(Node)); // Allocate memory for a new product
+    if (newProduct == NULL) { // Check if memory allocation was successful
+        printf(ANSI_COLOR_RED"Memory allocation failed.\n"ANSI_COLOR_RESET);
         return;
     }
 
     printf("Enter product ID: ");
-    scanf("%d", &newProduct->product.id);
+    scanf("%d", &newProduct->product.id); // Read product ID from user input
     printf("Enter product name: ");
-    scanf("%s", newProduct->product.name);
+    scanf("%s", newProduct->product.name); // Read product name from user input
     printf("Enter product price: ");
-    scanf("%f", &newProduct->product.price);
+    scanf("%f", &newProduct->product.price); // Read product price from user input
     printf("Enter product quantity: ");
-    scanf("%d", &newProduct->product.quantity);
+    scanf("%d", &newProduct->product.quantity); // Read product quantity from user input
 
-    newProduct->next = *head;
-    *head = newProduct;
+    newProduct->next = *head; // Set the next pointer of the new product to the current head
+    *head = newProduct; // Update the head pointer to point to the new product
 
     printf("----------------------------------\n");
     printf(ANSI_COLOR_GREEN "Product added successfully.\n" ANSI_COLOR_RESET);
     printf("----------------------------------\n");
 }
 
-// Function to view all products in the inventory
+/**
+ * @brief Displays all products in the inventory.
+ *
+ * This function displays the details of all products currently present in the inventory.
+ *
+ * @param head Pointer to the head of the linked list representing the inventory.
+ */
 void viewProducts(Node *head) {
     if (head == NULL) {
         printf("-------------------------------------\n");
-        printf(ANSI_COLOR_RED "Inventory is empty.\n" ANSI_COLOR_RESET);
+        printf(ANSI_COLOR_RED"Inventory is empty.\n"ANSI_COLOR_RESET);
         printf("-------------------------------------\n");
         return;
     }
@@ -74,7 +109,14 @@ void viewProducts(Node *head) {
     printf("-------------------------------------\n");
 }
 
-// Function to delete a product from the inventory
+/**
+ * @brief Deletes a product from the inventory based on its ID.
+ *
+ * This function allows the user to delete a product from the inventory based on its ID.
+ *
+ * @param head Pointer to the head of the linked list representing the inventory.
+ * @param id ID of the product to be deleted.
+ */
 void deleteProduct(Node **head, int id) {
     Node *temp = *head;
     Node *prev = NULL;
@@ -103,11 +145,17 @@ void deleteProduct(Node **head, int id) {
     printf("-------------------------------------\n");
 }
 
-// Function to generate a bill for the products in the inventory
+/**
+ * @brief Generates a bill for the products in the inventory.
+ *
+ * This function calculates the total cost of products in the inventory and generates a bill.
+ *
+ * @param head Pointer to the head of the linked list representing the inventory.
+ */
 void generateBill(Node *head) {
     if (head == NULL) {
         printf("-------------------------------------\n");
-        printf(ANSI_COLOR_RED "Inventory is empty.\n" ANSI_COLOR_RESET);
+        printf(ANSI_COLOR_RED"Inventory is empty.\n"ANSI_COLOR_RESET);
         printf("-------------------------------------\n");
         return;
     }
@@ -130,7 +178,14 @@ void generateBill(Node *head) {
     printf("*************************************\n");
 }
 
-// Function to calculate the total sales from the inventory
+/**
+ * @brief Calculates the total sales amount from all products in the inventory.
+ *
+ * This function calculates and returns the total sales amount from all products in the inventory.
+ *
+ * @param head Pointer to the head of the linked list representing the inventory.
+ * @return Total sales amount.
+ */
 float calculateTotalSales(Node *head) {
     float totalSales = 0;
 
@@ -142,7 +197,14 @@ float calculateTotalSales(Node *head) {
     return totalSales;
 }
 
-// Function to search for a product by ID
+/**
+ * @brief Searches for a product in the inventory based on its ID.
+ *
+ * This function allows the user to search for a product in the inventory based on its ID.
+ *
+ * @param head Pointer to the head of the linked list representing the inventory.
+ * @param id ID of the product to be searched.
+ */
 void searchProduct(Node *head, int id) {
     while (head != NULL) {
         if (head->product.id == id) {
@@ -160,7 +222,14 @@ void searchProduct(Node *head, int id) {
     printf("-------------------------------------\n");
 }
 
-// Function to update the details of a product
+/**
+ * @brief Updates the details of a product in the inventory based on its ID.
+ *
+ * This function allows the user to update the details (name, price, quantity) of a product in the inventory.
+ *
+ * @param head Pointer to the head of the linked list representing the inventory.
+ * @param id ID of the product to be updated.
+ */
 void updateProduct(Node *head, int id) {
     while (head != NULL) {
         if (head->product.id == id) {
@@ -183,13 +252,19 @@ void updateProduct(Node *head, int id) {
     printf("-------------------------------------\n");
 }
 
-// Function to backup the inventory to a file
+/**
+ * @brief Creates a backup file of the inventory data.
+ *
+ * This function creates a backup file of the inventory data in a text file named "inventory_backup.txt".
+ *
+ * @param head Pointer to the head of the linked list representing the inventory.
+ */
 void backupInventory(Node *head) {
     FILE *fp = fopen("inventory_backup.txt", "w");
 
     if (fp == NULL) {
         printf("-------------------------------------\n");
-        printf(ANSI_COLOR_BLUE "Error creating backup file.\n" ANSI_COLOR_RESET);
+        printf(ANSI_COLOR_BLUE"Error creating backup file.\n"ANSI_COLOR_RESET);
         printf("-------------------------------------\n");
         return;
     }
@@ -205,11 +280,17 @@ void backupInventory(Node *head) {
     printf("-------------------------------------\n");
 }
 
-// Function to restore the inventory from a backup file
+/**
+ * @brief Restores inventory data from a backup file.
+ *
+ * This function restores inventory data from a backup file named "inventory_backup.txt".
+ *
+ * @param head Pointer to the head of the linked list representing the inventory.
+ */
 void restoreInventory(Node **head) {
     FILE *fp = fopen("inventory_backup.txt", "r");
     if (fp == NULL) {
-        printf(ANSI_COLOR_RED "Backup file not found.\n" ANSI_COLOR_RESET);
+        printf(ANSI_COLOR_RED"Backup file not found.\n"ANSI_COLOR_RESET);
         return;
     }
 
@@ -228,7 +309,7 @@ void restoreInventory(Node **head) {
     while (fscanf(fp, "%d %s %f %d", &id, name, &price, &quantity) != EOF) {
         Node *newProduct = (Node *)malloc(sizeof(Node));
         if (newProduct == NULL) {
-            printf(ANSI_COLOR_RED "Memory allocation failed.\n" ANSI_COLOR_RESET);
+            printf(ANSI_COLOR_RED"Memory allocation failed.\n"ANSI_COLOR_RESET);
             return;
         }
         newProduct->product.id = id;
@@ -245,7 +326,11 @@ void restoreInventory(Node **head) {
     printf("-------------------------------------\n");
 }
 
-// Function for employee details
+/**
+ * @brief Displays employee information.
+ *
+ * This function displays information about employees, such as leave details.
+ */
 void emp() {
     printf("-------------------------------------\n");
     printf("Employees leave\n");
@@ -255,12 +340,21 @@ void emp() {
     printf("-------------------------------------\n");
 }
 
-// Function for sales information
+/**
+ * @brief Displays a message indicating a sale.
+ *
+ * This function displays a message indicating a sale.
+ */
 void sale() {
-    printf(ANSI_COLOR_MAGENTA "\nAthula onnum illa keela potru!\n\n" ANSI_COLOR_RESET);
+    printf(ANSI_COLOR_MAGENTA"\nAthula onnum illa keela potru!\n\n"ANSI_COLOR_RESET);
     printf("-------------------------------------\n");
 }
 
+/**
+ * @brief Main function.
+ *
+ * The main function for the inventory management system.
+ */
 int main() {
     Node *inventory = NULL;
     int choice;
@@ -271,11 +365,10 @@ int main() {
         printf("2. View Products\n");
         printf("3. Delete Product\n");
         printf("4. Generate Bill\n");
-        printf("5. Calculate Total Sales\n");
-        printf("6. Search Product\n");
-        printf("7. Update Product\n");
-        printf("8. Backup & Restore Inventory\n");
-        printf("9. Management Info\n");
+        printf("5. Search Product\n");
+        printf("6. Update Product\n");
+        printf("7. Backup & Restore Inventory\n");
+        printf("8. Management Info\n");
         printf("0. Exit\n" ANSI_COLOR_RESET);
         printf("-------------------------------------\n");
         printf("Enter your choice: ");
@@ -299,21 +392,18 @@ int main() {
                 generateBill(inventory);
                 break;
             case 5:
-                printf("Total Sales: %.2f\n", calculateTotalSales(inventory));
-                break;
-            case 6:
                 printf("Enter product ID to search: ");
                 scanf("%d", &id);
                 searchProduct(inventory, id);
                 break;
-            case 7:
+            case 6:
                 printf("Enter product ID to update: ");
                 scanf("%d", &id);
                 updateProduct(inventory, id);
                 break;
-            case 8:
-                printf(ANSI_COLOR_YELLOW "1. Backup Inventory\n");
-                printf("2. Restore Inventory\n" ANSI_COLOR_RESET);
+            case 7:
+                printf(ANSI_COLOR_YELLOW"1. Backup Inventory\n");
+                printf("2. Restore Inventory\n"ANSI_COLOR_RESET);
                 printf("-------------------------------------\n");
                 printf("Enter your choice: ");
                 int zz;
@@ -328,15 +418,16 @@ int main() {
                         break;
                 }
                 break;
-            case 9:
+            case 8:
                 printf("Enter password: ");
                 int pass;
                 scanf("%d",&pass);
                 if (pass == 189) {
-                    printf(ANSI_COLOR_GREEN "Access granted\n" ANSI_COLOR_RESET);
+                    printf(ANSI_COLOR_GREEN"Access granted\n"ANSI_COLOR_RESET);
                     printf("-------------------------------------\n");
-                    printf(ANSI_COLOR_YELLOW "1. Sales and Income\n");
-                    printf("2. Employees Details\n" ANSI_COLOR_RESET);
+                    printf(ANSI_COLOR_YELLOW"1. Sales and Income\n");
+                    printf("2. Employees Details\n");
+                    printf("3. Total Sales\n"ANSI_COLOR_RESET);
                     printf("-------------------------------------\n");
                     printf("Enter your choice: ");
                     int xx;
@@ -350,16 +441,19 @@ int main() {
                         case 2:
                             emp();
                             break;
+                        case 3:
+                            printf("Total Sales: %.2f\n", calculateTotalSales(inventory));
+                            break;
                     }
                 }
                 else
-                    printf(ANSI_COLOR_RED "Password incorrect\n" ANSI_COLOR_RESET);
+                    printf(ANSI_COLOR_RED"Password incorrect\n"ANSI_COLOR_RESET);
                 break;
             case 0:
                 printf(ANSI_COLOR_RED "Exiting...\n" ANSI_COLOR_RESET);
                 break;
             default:
-                printf(ANSI_COLOR_RED "Invalid choice. Please try again.\n" ANSI_COLOR_RESET);
+                printf(ANSI_COLOR_RED"Invalid choice. Please try again.\n"ANSI_COLOR_RESET);
                 break;
         }
     } while (choice != 0);
