@@ -7,7 +7,7 @@
  * calculate total sales, and backup/restore inventory data. It also includes
  * functionality for management information such as employee details and sales information.
  *
- * @authors Sanjai Magilan.S, Miruthul Kumar.M, Naveen.N
+ * @author Sanjai Magilan.S
  * @date [7/4/2024]
  */
 
